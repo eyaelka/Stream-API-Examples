@@ -30,13 +30,12 @@ public class SecurityConfig {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeHttpRequests().requestMatchers("/login/**","/add-user/**","/without-streams","/with-streams").permitAll();
         http.authorizeHttpRequests().requestMatchers(HttpMethod.POST,"/add-product").hasAuthority("admin");
-        http.authorizeHttpRequests().requestMatchers(HttpMethod.GET,"/products").hasAuthority("admin");
-
+        http.authorizeHttpRequests().requestMatchers(HttpMethod.GET,"/products","/user/**").hasAuthority("admin");
+        http.authorizeHttpRequests().requestMatchers(HttpMethod.DELETE,"/delete-user").hasAuthority("admin");
         http.authorizeHttpRequests().anyRequest().authenticated();
         http.addFilter(new JWTAuthenticationFilter(authenticationManagerBuilder));
         http.addFilterBefore(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
-
     }
 
     @Bean
